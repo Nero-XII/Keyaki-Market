@@ -1,0 +1,136 @@
+{
+  "products": [
+    {
+      "id": "0",
+      "name": "Rice",
+      "description": "1kg",
+      "price": 1.33,
+      "img": "img/rice.jpg"
+    },
+    {
+      "id": "1",
+      "name": "Chicken",
+      "description": "2kg",
+      "price": 6.15,
+      "img": "img/chicken.jpg"
+    },
+    {
+      "id": "2",
+      "name": "Chicken Steak",
+      "description": "650g",
+      "price": 4.81,
+      "img": "img/chicken_steak.jpg"
+    },
+    {
+      "id": "3",
+      "name": "Macaroon",
+      "description": "1kg",
+      "price": 1.25,
+      "img": "img/macaroon.jpg"
+    },
+    {
+      "id": "4",
+      "name": "Macaroon",
+      "description": "500g",
+      "price": 0.8,
+      "img": "img/macaroon_500.jpg"
+    },
+    {
+      "id": "5",
+      "name": "Spaghetti",
+      "description": "1kg",
+      "price": 1.25,
+      "img": "img/spaghetti.jpg"
+    },
+    {
+      "id": "5",
+      "name": "Spaghetti",
+      "description": "500g",
+      "price": 0.8,
+      "img": "img/spaghetti_500.jpg"
+    },
+    {
+      "id": "6",
+      "name": "Peach Ice Tea",
+      "description": "12 sachets, 36g",
+      "price": 1.5,
+      "img": "img/peach_ice_tea.jpg"
+    },
+    {
+      "id": "7",
+      "name": "Lemon Ice Tea",
+      "description": "12 sachets, 36g",
+      "price": 1.5,
+      "img": "img/lemon_ice_tea.jpg"
+    }
+  ],
+  "customers": [
+    {
+      "id": "0",
+      "name": "Martina",
+      "password": "passwd"
+    },
+    {
+      "id": "1",
+      "name": "Cristina",
+      "password": "passwd"
+    },
+    {
+      "id": "2",
+      "name": "Nero",
+      "password": "passwd"
+    },
+    {
+      "id": "3",
+      "name": "User1",
+      "password": "passwd"
+    },
+    {
+      "id": 4,
+      "name": "Lucy",
+      "password": "passwd"
+    },
+    {
+      "id": 5,
+      "name": "kiyotaka",
+      "password": "passwd"
+    }
+  ],
+  "orders": [
+    {
+      "id": "0",
+      "customerId": 0,
+      "total": 8.81,
+      "checkout": true
+    },
+    {
+      "id": "1",
+      "customerId": 1,
+      "total": 9.62,
+      "checkout": false
+    }
+  ],
+  "details": [
+    {
+      "orderId": 0,
+      "productId": 0,
+      "quantity": 2,
+      "subtotal": 2.66,
+      "id": "e9be"
+    },
+    {
+      "orderId": 0,
+      "productId": 1,
+      "quantity": 1,
+      "subtotal": 6.15,
+      "id": "720c"
+    },
+    {
+      "orderId": 1,
+      "productId": 2,
+      "quantity": 2,
+      "subtotal": 9.62,
+      "id": "9227"
+    }
+  ]
+}
