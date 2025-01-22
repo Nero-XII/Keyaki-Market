@@ -1,0 +1,4 @@
+Changes due to final delivery:
+
+- Update UML
+- Update diagram and add technologies

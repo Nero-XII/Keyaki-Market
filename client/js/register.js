@@ -11,14 +11,19 @@ document.getElementById('registerForm').addEventListener('submit', function (e) 
     }
 
     fetch('http://localhost:3000/customers')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error trying to get customer');
+            }
+            return response.json();
+        })
         .then(customers => {
             const customerExists = customers.some(c => c.name === username);
 
             if (customerExists) {
                 alert('Username already exists. Please choose another one.');
             } else {
-                const newCustomer = { id: customers.length, name: username, password: password };
+                const newCustomer = { _id: customers.length.toString(), name: username, password: password };
 
                 fetch('http://localhost:3000/customers', {
                     method: 'POST',
@@ -27,7 +32,10 @@ document.getElementById('registerForm').addEventListener('submit', function (e) 
                     },
                     body: JSON.stringify(newCustomer),
                 })
-                    .then(() => {
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error trying to create customer');
+                        }
                         alert('Registration successful! Redirecting to login...');
                         window.location.href = 'login.html';
                     })
