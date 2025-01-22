@@ -1,0 +1,603 @@
+openapi: 3.0.3
+info:
+  title: Keyaki Market - OpenAPI 3.0
+  description: API documentation for PMUD final project Keyaki market.
+  version: 1.0.11
+servers:
+- url: http://localhost:3000/
+tags:
+- name: auth
+  description: Authentication related calls
+- name: customers
+  description: Customer related calls
+- name: products
+  description: Product related calls
+- name: orders
+  description: Order related calls
+paths:
+  /auth/user:
+    get:
+      tags:
+      - auth
+      summary: Get the logged-in user
+      operationId: getUser
+      responses:
+        "200":
+          description: Successfully retrieved user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "401":
+          description: No user logged in
+      x-swagger-router-controller: Auth
+  /auth/login:
+    post:
+      tags:
+      - auth
+      summary: Login a user
+      operationId: login
+      requestBody:
+        description: Login credentials
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/auth_login_body'
+      responses:
+        "200":
+          description: Loggin successful
+        "401":
+          description: Invalid credentials
+        "500":
+          description: Loggin error
+      x-swagger-router-controller: Auth
+  /auth/logout:
+    post:
+      tags:
+      - auth
+      summary: Logout the user
+      operationId: logout
+      responses:
+        "200":
+          description: Successfully logged out
+        "500":
+          description: Loggout error
+      x-swagger-router-controller: Auth
+  /customers:
+    get:
+      tags:
+      - customers
+      summary: Get all customers
+      operationId: getAllCustomers
+      responses:
+        "200":
+          description: List of all customers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/inline_response_200'
+                x-content-type: application/json
+        "500":
+          description: Error retrieving customers
+      x-swagger-router-controller: Customers
+    post:
+      tags:
+      - customers
+      summary: Create a new customer
+      operationId: createCustomer
+      requestBody:
+        description: Customer data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/customers_body'
+      responses:
+        "201":
+          description: Customer created successfully
+        "400":
+          description: Error creating customer
+      x-swagger-router-controller: Customers
+  /customers/{id}:
+    get:
+      tags:
+      - customers
+      summary: Get a customer by ID
+      operationId: getCustomerById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Customer details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "404":
+          description: Customer not found
+        "500":
+          description: Error retrieving customer
+      x-swagger-router-controller: Customers
+  /products:
+    get:
+      tags:
+      - products
+      summary: Get all products
+      operationId: getAllProducts
+      responses:
+        "200":
+          description: List of all products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/inline_response_200_1'
+                x-content-type: application/json
+        "500":
+          description: Error retrieving products
+      x-swagger-router-controller: Products
+    post:
+      tags:
+      - products
+      summary: Create a new product
+      operationId: createProduct
+      requestBody:
+        description: Product data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/products_body'
+      responses:
+        "201":
+          description: Product data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/products_body'
+        "400":
+          description: Error creating product
+      x-swagger-router-controller: Products
+  /products/{id}:
+    get:
+      tags:
+      - products
+      summary: Get a product by ID
+      operationId: getProductById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/products_body'
+        "404":
+          description: Product not found
+        "500":
+          description: Error retrieving product
+      x-swagger-router-controller: Products
+  /orders:
+    get:
+      tags:
+      - orders
+      summary: Get all orders
+      operationId: getAllOrders
+      responses:
+        "200":
+          description: List of all orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/inline_response_200_2'
+                x-content-type: application/json
+        "500":
+          description: Error retrieving orders
+      x-swagger-router-controller: Orders
+    post:
+      tags:
+      - orders
+      summary: Create a new order
+      operationId: createOrder
+      requestBody:
+        description: Order data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/orders_body'
+      responses:
+        "201":
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201'
+        "400":
+          description: Error creating order
+      x-swagger-router-controller: Orders
+  /orders/{id}:
+    get:
+      tags:
+      - orders
+      summary: Get history from customer by customerID
+      description: "Gets all the orders that have been checked out, that's where the\
+        \ status is set to 'checkout', they all form the customer shopping history."
+      operationId: getOrdersByCustomerId
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Order details
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/orders_body'
+                x-content-type: application/json
+        "404":
+          description: Order not found
+        "500":
+          description: Error retrieving order
+      x-swagger-router-controller: Orders
+    patch:
+      tags:
+      - orders
+      summary: Checkout an order by ID
+      description: Checkout the order means to add a date to it and set its status
+        to 'checkout'.
+      operationId: updateOrder
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Order updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201'
+        "400":
+          description: Error updating order
+        "404":
+          description: Order not found
+      x-swagger-router-controller: Orders
+  /orders/cart/{id}:
+    get:
+      tags:
+      - orders
+      summary: Get cart by customer ID
+      description: "Gets the order of the customer where the status is 'in_cart',\
+        \ there is only one order that  meets this requirement."
+      operationId: getCartByCustomerId
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Cart details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201'
+        "404":
+          description: Cart order not found
+        "500":
+          description: Error retrieving cart
+      x-swagger-router-controller: Orders
+  /orders/details/{id}:
+    patch:
+      tags:
+      - orders
+      summary: Update order details by ID
+      description: "Adds or substracts 1 to the order details.quantity, calculates\
+        \ new total and detail.subtotal, if details.quantity is set to 0, the detail\
+        \ (the product) is removed from the order, then if there are no details (no\
+        \ more products) left, removes de order."
+      operationId: updateOrderDetails
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Order detail update data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/details_id_body'
+      responses:
+        "200":
+          description: Order data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201'
+        "400":
+          description: Error updating order detail
+        "404":
+          description: Order or product not found
+      x-swagger-router-controller: Orders
+  /orders/details/add/{id}:
+    patch:
+      tags:
+      - orders
+      summary: Add product to an existing order
+      description: "Adds a new product to an order, sets automatically the quantity\
+        \ and the price to 0. The purpose for this is to call inmediatelly after the\
+        \ details update in 'add' mode to set the quantity to 1 and calculate the\
+        \ order total and the detail subtotal."
+      operationId: addOrderDetails
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Product details to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/add_id_body'
+      responses:
+        "200":
+          description: Product added to order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201'
+        "400":
+          description: Product already exists in the cart
+        "404":
+          description: Order not found
+        "500":
+          description: Error adding product to order
+      x-swagger-router-controller: Orders
+components:
+  schemas:
+    inline_response_200:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        password:
+          type: string
+      example:
+        password: password
+        name: name
+        _id: _id
+    auth_login_body:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    customers_body:
+      type: object
+      properties:
+        name:
+          type: string
+        password:
+          type: string
+    inline_response_200_1:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        img:
+          type: string
+      example:
+        img: img
+        price: 0.80082819046101150206595775671303272247314453125
+        name: name
+        description: description
+        _id: _id
+    products_body:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        img:
+          type: string
+      example:
+        img: img
+        price: 0.80082819046101150206595775671303272247314453125
+        name: name
+        description: description
+        _id: _id
+    orders_details:
+      type: object
+      properties:
+        product_id:
+          type: string
+        quantity:
+          type: number
+        subtotal:
+          type: number
+      example:
+        quantity: 6.02745618307040320615897144307382404804229736328125
+        subtotal: 1.46581298050294517310021547018550336360931396484375
+        product_id: product_id
+    inline_response_200_2:
+      type: object
+      properties:
+        _id:
+          type: string
+        customer_id:
+          type: string
+        total:
+          type: number
+        date:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum:
+          - in_cart
+          - checked_out
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/orders_details'
+      example:
+        date: 2000-01-23T04:56:07.000+00:00
+        total: 0.80082819046101150206595775671303272247314453125
+        details:
+        - quantity: 6.02745618307040320615897144307382404804229736328125
+          subtotal: 1.46581298050294517310021547018550336360931396484375
+          product_id: product_id
+        - quantity: 6.02745618307040320615897144307382404804229736328125
+          subtotal: 1.46581298050294517310021547018550336360931396484375
+          product_id: product_id
+        _id: _id
+        customer_id: customer_id
+        status: in_cart
+    orders_body:
+      type: object
+      properties:
+        _id:
+          type: string
+        customer_id:
+          type: string
+        total:
+          type: number
+        date:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum:
+          - in_cart
+          - checked_out
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/orders_details'
+      example:
+        date: 2000-01-23T04:56:07.000+00:00
+        total: 0.80082819046101150206595775671303272247314453125
+        details:
+        - quantity: 6.02745618307040320615897144307382404804229736328125
+          subtotal: 1.46581298050294517310021547018550336360931396484375
+          product_id: product_id
+        - quantity: 6.02745618307040320615897144307382404804229736328125
+          subtotal: 1.46581298050294517310021547018550336360931396484375
+          product_id: product_id
+        _id: _id
+        customer_id: customer_id
+        status: in_cart
+    inline_response_201:
+      type: object
+      properties:
+        _id:
+          type: string
+        customer_id:
+          type: string
+        total:
+          type: number
+        date:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum:
+          - in_cart
+          - checked_out
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              product_id:
+                type: string
+              quantity:
+                type: number
+              subtotal:
+                type: number
+            example:
+              quantity: 6.02745618307040320615897144307382404804229736328125
+              subtotal: 1.46581298050294517310021547018550336360931396484375
+              product_id: product_id
+      example:
+        date: 2000-01-23T04:56:07.000+00:00
+        total: 0.80082819046101150206595775671303272247314453125
+        details:
+        - quantity: 6.02745618307040320615897144307382404804229736328125
+          subtotal: 1.46581298050294517310021547018550336360931396484375
+          product_id: product_id
+        - quantity: 6.02745618307040320615897144307382404804229736328125
+          subtotal: 1.46581298050294517310021547018550336360931396484375
+          product_id: product_id
+        _id: _id
+        customer_id: customer_id
+        status: in_cart
+    details_id_body:
+      type: object
+      properties:
+        product_id:
+          type: string
+        price:
+          type: number
+        action:
+          type: string
+          enum:
+          - add
+          - substract
+    add_id_body:
+      type: object
+      properties:
+        product_id:
+          type: string
