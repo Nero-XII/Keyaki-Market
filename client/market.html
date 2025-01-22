@@ -15,7 +15,10 @@
 <body>
     <div class="top-bar">
         <div class="left-cont">
-            <img class="logo" src="img/keyaki.png" srcset="img/logo.png 1300w" alt="Keyaki Market">
+            <picture>
+                <source srcset="img/logo.png" media="(max-width: 1300px)">
+                <img class="logo" src="img/keyaki.png" alt="Keyaki Market">
+              </picture>
         </div>
         <div class="center-cont">
             <input class="search-bar" id="search-bar" type="text" placeholder="Search any product">

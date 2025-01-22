@@ -34,7 +34,7 @@ function loadProducts() {
         .then(products => {
             renderProducts(products);
 
-            document.getElementById('search-bar').addEventListener('input', function(event) {
+            document.getElementById('search-bar').addEventListener('input', function (event) {
                 const searchTerm = event.target.value;
                 const filteredProducts = filterProducts(searchTerm, products);
                 renderProducts(filteredProducts);
@@ -57,96 +57,98 @@ function renderProducts(products) {
 }
 
 function addToCart(event) {
-    const button = event.target;
-    const productId = button.dataset.productId;
-    const productPrice = parseFloat(button.dataset.productPrice);
+    if (window.userId) {
+        const button = event.target;
+        const productId = button.dataset.productId;
+        const productPrice = parseFloat(button.dataset.productPrice);
 
-    if (window.cartId === null) {
-        fetch('http://localhost:3000/orders')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to fetch orders');
-                }
-                return response.json();
-            })
-            .then(orders => {
-                const nextOrderId = orders.length + 1;
+        if (window.cartId === null) {
+            fetch('http://localhost:3000/orders')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch orders');
+                    }
+                    return response.json();
+                })
+                .then(orders => {
+                    const nextOrderId = orders.length + 1;
 
-                fetch('http://localhost:3000/orders', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        _id: nextOrderId.toString(),
-                        customer_id: window.userId,
-                        total: productPrice,
-                        date: "",
-                        status: "in_cart",
-                        details: [
-                            {
-                                product_id: productId,
-                                quantity: 1,
-                                subtotal: productPrice,
+                    fetch('http://localhost:3000/orders', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            _id: nextOrderId.toString(),
+                            customer_id: window.userId,
+                            total: productPrice,
+                            date: "",
+                            status: "in_cart",
+                            details: [
+                                {
+                                    product_id: productId,
+                                    quantity: 1,
+                                    subtotal: productPrice,
+                                }
+                            ]
+                        })
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Error trying to create new order');
                             }
-                        ]
-                    })
+                            return response.json();
+                        })
+                        .then(order => {
+                            window.cartId = order._id;
+                            window.showCart();
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
                 })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Error trying to create new order');
-                        }
-                        return response.json();
-                    })
-                    .then(order => {
-                        window.cartId = order._id;
-                        window.showCart();
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    } else {
-        fetch(`http://localhost:3000/orders/details/add/${window.cartId}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                product_id: productId,
-            })
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error adding product to cart');
-                }
-                fetch(`http://localhost:3000/orders/details/${window.cartId}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        product_id: productId,
-                        price: productPrice,
-                        action: 'add'
-                    })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        } else {
+            fetch(`http://localhost:3000/orders/details/add/${window.cartId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    product_id: productId,
                 })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Error adding product details to cart');
-                        }
-                        window.showCart();
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
             })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error adding product to cart');
+                    }
+                    fetch(`http://localhost:3000/orders/details/${window.cartId}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            product_id: productId,
+                            price: productPrice,
+                            action: 'add'
+                        })
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Error adding product details to cart');
+                            }
+                            window.showCart();
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
     }
 }
 
